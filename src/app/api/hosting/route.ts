@@ -8,10 +8,11 @@ export async function GET() {
     const data = await hostingApi.list(token);
     return NextResponse.json(data);
   } catch (e) {
+    console.error("[hosting GET] Error:", e);
     if (e instanceof Error && e.message === "UNAUTHORIZED") {
       return NextResponse.json({ error: "Neautorizovaný" }, { status: 401 });
     }
-    return NextResponse.json({ error: "Chyba servera" }, { status: 500 });
+    return NextResponse.json({ error: "Chyba servera", details: String(e) }, { status: 500 });
   }
 }
 
