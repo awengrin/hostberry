@@ -55,12 +55,14 @@ export async function apiRequest<T = unknown>(
     body: body ? JSON.stringify(body) : undefined,
   });
 
+  const text = await res.text();
+
   if (!res.ok) {
-    let errorData: unknown;
+    let errorData: unknown = text;
     try {
-      errorData = await res.json();
+      errorData = JSON.parse(text);
     } catch {
-      errorData = await res.text();
+      // keep as text
     }
     console.error(`[API] ${method} ${url.toString()} -> ${res.status}`, errorData);
     throw new ApiError(
@@ -70,9 +72,12 @@ export async function apiRequest<T = unknown>(
     );
   }
 
-  // Some endpoints may return empty responses
-  const text = await res.text();
   if (!text) return {} as T;
 
-  return JSON.parse(text) as T;
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    console.error(`[API] Failed to parse response:`, text.substring(0, 500));
+    return {} as T;
+  }
 }
