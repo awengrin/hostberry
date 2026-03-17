@@ -39,7 +39,7 @@ export async function apiRequest<T = unknown>(
   }
 
   const headers: Record<string, string> = {
-    Authorization: `Bearer ${getToken(token)}`,
+    Authorization: `Bearer ${tokenValue}`,
     Accept: "application/json",
   };
 
@@ -47,7 +47,8 @@ export async function apiRequest<T = unknown>(
     headers["Content-Type"] = "application/json";
   }
 
-  console.log(`[API] ${method} ${url.toString()}`);
+  const tokenValue = getToken(token);
+  console.log(`[API] ${method} ${url.toString()} [token: ${tokenValue ? tokenValue.substring(0, 8) + '...' : 'EMPTY'}]`);
 
   const res = await fetch(url.toString(), {
     method,
