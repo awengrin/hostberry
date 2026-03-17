@@ -1,6 +1,6 @@
 const API_BASE_URL =
   process.env.HOSTCREATORS_API_URL ||
-  "https://www.hostcreators.sk/api/v1/host";
+  "https://www.hostberry.sk/api/v1/host";
 
 export class ApiError extends Error {
   constructor(
