@@ -9,11 +9,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Token je povinný" }, { status: 400 });
     }
 
-    // Verify token by calling a test endpoint
+    // Verify token by calling a lightweight endpoint
     try {
-      await apiRequest("/domain", { token });
+      await apiRequest("/domain/check", { token, params: { q: "test.sk" } });
     } catch (verifyError) {
-      // Log the actual error for debugging
       console.error("Token verification error:", verifyError);
 
       // If it's a 401/403, token is truly invalid
@@ -27,7 +26,6 @@ export async function POST(req: NextRequest) {
         );
       }
       // For other errors (404, 500, network), token might be valid
-      // but endpoint differs - allow login
       console.log("Token verification endpoint returned non-auth error, allowing login");
     }
 
