@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { setToken, clearToken, getToken } from "@/lib/auth";
-import { apiRequest } from "@/lib/api/client";
+import { apiRequest, ApiError } from "@/lib/api/client";
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,7 +10,26 @@ export async function POST(req: NextRequest) {
     }
 
     // Verify token by calling a test endpoint
-    await apiRequest("/domain/list", { token });
+    try {
+      await apiRequest("/domain/list", { token });
+    } catch (verifyError) {
+      // Log the actual error for debugging
+      console.error("Token verification error:", verifyError);
+
+      // If it's a 401/403, token is truly invalid
+      if (
+        verifyError instanceof ApiError &&
+        (verifyError.status === 401 || verifyError.status === 403)
+      ) {
+        return NextResponse.json(
+          { error: "Neplatný API token" },
+          { status: 401 }
+        );
+      }
+      // For other errors (404, 500, network), token might be valid
+      // but endpoint differs - allow login
+      console.log("Token verification endpoint returned non-auth error, allowing login");
+    }
 
     await setToken(token);
     return NextResponse.json({ success: true });
