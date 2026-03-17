@@ -38,6 +38,9 @@ export async function apiRequest<T = unknown>(
     Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
   }
 
+  const tokenValue = getToken(token);
+  console.log(`[API] ${method} ${url.toString()} [token: ${tokenValue ? tokenValue.substring(0, 8) + '...' : 'EMPTY'}]`);
+
   const headers: Record<string, string> = {
     Authorization: `Bearer ${tokenValue}`,
     Accept: "application/json",
@@ -46,9 +49,6 @@ export async function apiRequest<T = unknown>(
   if (body) {
     headers["Content-Type"] = "application/json";
   }
-
-  const tokenValue = getToken(token);
-  console.log(`[API] ${method} ${url.toString()} [token: ${tokenValue ? tokenValue.substring(0, 8) + '...' : 'EMPTY'}]`);
 
   const res = await fetch(url.toString(), {
     method,
