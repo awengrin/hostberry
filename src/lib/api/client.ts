@@ -47,6 +47,8 @@ export async function apiRequest<T = unknown>(
     headers["Content-Type"] = "application/json";
   }
 
+  console.log(`[API] ${method} ${url.toString()}`);
+
   const res = await fetch(url.toString(), {
     method,
     headers,
@@ -60,6 +62,7 @@ export async function apiRequest<T = unknown>(
     } catch {
       errorData = await res.text();
     }
+    console.error(`[API] ${method} ${url.toString()} -> ${res.status}`, errorData);
     throw new ApiError(
       res.status,
       `API error: ${res.status} ${res.statusText}`,
