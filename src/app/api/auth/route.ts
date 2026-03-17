@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
 
     // Verify token by calling a test endpoint
     try {
-      await apiRequest("/domain/list", { token });
+      await apiRequest("/domain", { token });
     } catch (verifyError) {
       // Log the actual error for debugging
       console.error("Token verification error:", verifyError);

@@ -15,14 +15,14 @@ export const domainsApi = {
     apiRequest("/domain/store", { method: "POST", body: { ...data, type: "transfer" }, token }),
 
   list: (token?: string) =>
-    apiRequest("/domain/list", { token }),
+    apiRequest("/domain", { token }),
 
   destroy: (id: number | string, token?: string) =>
     apiRequest(`/domain/${id}`, { method: "DELETE", token }),
 
   // Hosted Domains
   listHosted: (token?: string) =>
-    apiRequest("/domains", { token }),
+    apiRequest("/domain", { token }),
 
   pruneCache: (domain: string, token?: string) =>
     apiRequest(`/domain/${domain}/prune-http-cache`, { token }),

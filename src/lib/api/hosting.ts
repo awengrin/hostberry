@@ -8,7 +8,7 @@ export const hostingApi = {
     apiRequest("/plan/store", { method: "POST", body: data, token }),
 
   list: (token?: string) =>
-    apiRequest("/plan/list", { token }),
+    apiRequest("/plan", { token }),
 
   destroy: (id: number | string, token?: string) =>
     apiRequest(`/plan/${id}`, { method: "DELETE", token }),
